@@ -1,4 +1,7 @@
 .python-version
+__pycache__
 
 # Tiled tests
 tiled
+
+.idea
