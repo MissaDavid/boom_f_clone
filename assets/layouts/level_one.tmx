@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="17" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="1">
+<map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="17" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="5">
+ <editorsettings>
+  <export target="level_one.csv" format="csv"/>
+ </editorsettings>
  <tileset firstgid="1" source="../tilesets/border1.tsx"/>
  <tileset firstgid="256" source="../tilesets/background.tsx"/>
  <tileset firstgid="257" source="../tilesets/blocks.tsx"/>
  <tileset firstgid="289" source="../tilesets/fixed.tsx"/>
+ <tileset firstgid="297" source="../tilesets/player_one.tsx"/>
  <layer id="1" name="border" width="17" height="15">
   <data encoding="csv">
 1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,17,
 18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,238,
 18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,238,
 18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,238,
-18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,238,
+18,297,0,0,0,0,0,0,0,0,0,0,0,0,0,0,238,
 18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,238,
 18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,238,
 18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,238,
@@ -77,6 +81,25 @@
 0,0,0,0,0,257,0,257,0,0,0,0,0,257,257,0,0,
 0,257,0,257,0,0,0,0,0,257,0,0,0,0,0,0,0,
 0,0,0,257,0,0,257,0,0,0,0,257,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="8" name="Player" width="17" height="15">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,297,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
