@@ -1,12 +1,8 @@
-import os
-
 import pygame
 
-from game_settings import TILE_SIZE
+from game_settings import TILE_SIZE, ASSET_FOLDER
 from tile import Tile
 from utils import import_csv_layout, import_sprites
-
-TOP_LEVEL_DIR = os.path.join(os.getcwd())
 
 
 class Level:
@@ -20,7 +16,16 @@ class Level:
 
         # read tileset and create group for every layer of the level
         self.border = self.create_tile_group(
-            import_csv_layout(level_data.get("border")), "border"
+            import_csv_layout(level_data.get("border")), "border1"
+        )
+        self.background = self.create_tile_group(
+            import_csv_layout(level_data.get("background")), "bg1"
+        )
+        self.breakables = self.create_tile_group(
+            import_csv_layout(level_data.get("breakables")), "breakable"
+        )
+        self.fixed = self.create_tile_group(
+            import_csv_layout(level_data.get("fixed")), "fixed"
         )
 
     @staticmethod
@@ -41,7 +46,7 @@ class Level:
                     y = row_index * TILE_SIZE
 
                     sprites = import_sprites(
-                        f"{TOP_LEVEL_DIR}/assets/tilesets/{asset_type}.png"
+                        f"{ASSET_FOLDER}/tilesets/{asset_type}.png"
                     )
                     current_sprite = sprites[int(val)]
                     tile = Tile((x, y), current_sprite)
@@ -51,3 +56,6 @@ class Level:
     def run(self):
         # update and draw
         self.border.draw(self.display_surface)
+        self.background.draw(self.display_surface)
+        self.fixed.draw(self.display_surface)
+        self.breakables.draw(self.display_surface)
