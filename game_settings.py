@@ -16,4 +16,5 @@ LEVEL_ONE_DICT = {
     "background": f"{ASSET_FOLDER}/layouts/level_one_background.csv",
     "breakables": f"{ASSET_FOLDER}/layouts/level_one_breakables.csv",
     "fixed": f"{ASSET_FOLDER}/layouts/level_one_fixed.csv",
+    "player_one": f"{ASSET_FOLDER}/layouts/level_one_Player.csv",
 }
