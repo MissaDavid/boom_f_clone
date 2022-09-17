@@ -28,7 +28,9 @@ def import_sprites(file) -> list:
 
             # create a new Surface and blit the sprite on it
             sprite_rect = pygame.Rect(x, y, TILE_SIZE, TILE_SIZE)
-            new_surface = pygame.Surface((TILE_SIZE, TILE_SIZE))
+            # with the SRCALPHA flag, the pixel format will include a per-pixel alpha
+            # I use this so the target Surface becomes transparent
+            new_surface = pygame.Surface((TILE_SIZE, TILE_SIZE), pygame.SRCALPHA)
             new_surface.blit(spritesheet, (0, 0), sprite_rect)
 
             sprite_list.append(new_surface)
