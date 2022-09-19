@@ -16,7 +16,9 @@ class Player(py.sprite.Sprite):
         self.face_left = False
         self.face_down = False
         self.face_up = False
-        self.speed = 2
+        self.movement_speed = 2
+        self.frame_index = 0
+        self.animation_speed = 0.15
 
     def set_animation_sprites(
         self,
@@ -51,6 +53,28 @@ class Player(py.sprite.Sprite):
         self.face_up = True if self.direction.y == -1 else False
         self.face_down = True if self.direction.y == 1 else False
 
+    def animate(self):
+        if self.direction == [0, 0]:
+            self.image = self.animations["idle"]
+
+        self.frame_index += self.animation_speed
+        if self.direction.x < 0:
+            if self.frame_index >= len(self.animations["walk_left"]):
+                self.frame_index = 0
+            self.image = self.animations["walk_left"][int(self.frame_index)]
+        if self.direction.x > 0:
+            if self.frame_index >= len(self.animations["walk_right"]):
+                self.frame_index = 0
+            self.image = self.animations["walk_right"][int(self.frame_index)]
+        if self.direction.y > 0:
+            if self.frame_index >= len(self.animations["walk_down"]):
+                self.frame_index = 0
+            self.image = self.animations["walk_down"][int(self.frame_index)]
+        elif self.direction.y < 0:
+            if self.frame_index >= len(self.animations["walk_up"]):
+                self.frame_index = 0
+            self.image = self.animations["walk_up"][int(self.frame_index)]
+
     def get_collisions(self, obstacles):
         collisions = []
         for sprite in obstacles:
@@ -59,32 +83,23 @@ class Player(py.sprite.Sprite):
 
         return collisions
 
-    def stop(self):
-        self.image = self.animations["idle"]
-
     def move(self, obstacles):
-        if self.direction == [0, 0]:
-            self.stop()
-            return
+        self.animate()
 
-        self.rect.x += self.direction.x * self.speed
+        self.rect.x += self.direction.x * self.movement_speed
         collisions = self.get_collisions(obstacles)
         for tile in collisions:
             if self.direction.x < 0:
-                self.image = self.animations["walk_left"][0]
                 self.rect.left = tile.rect.right
             elif self.direction.x > 0:
-                self.image = self.animations["walk_right"][0]
                 self.rect.right = tile.rect.left
 
-        self.rect.y += self.direction.y * self.speed
+        self.rect.y += self.direction.y * self.movement_speed
         collisions = self.get_collisions(obstacles)
         for tile in collisions:
             if self.direction.y > 0:
-                self.image = self.animations["walk_down"][0]
                 self.rect.bottom = tile.rect.top
             elif self.direction.y < 0:
-                self.image = self.animations["walk_up"][0]
                 self.rect.top = tile.rect.bottom
 
     def update(self, obstacles: list):
