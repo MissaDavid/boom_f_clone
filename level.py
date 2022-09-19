@@ -84,6 +84,9 @@ class Level:
         # interactive tiles
         self.breakables.draw(self.display_surface)
 
-        # player
-        self.player_one.update()
+        # Player
+        all_obstacles = (
+            self.border.sprites() + self.fixed.sprites() + self.breakables.sprites()
+        )
+        self.player_one.update(all_obstacles)
         self.player_one.draw(self.display_surface)
