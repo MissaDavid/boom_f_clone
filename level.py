@@ -1,7 +1,7 @@
 import pygame
 
 from game_settings import TILE_SIZE, ASSET_FOLDER
-from player import Player
+from player import Player, Bomb
 from tile import Tile
 from utils import import_csv_layout, import_sprites
 
@@ -37,6 +37,7 @@ class Level:
         self.player_one = self.create_tile_group(
             import_csv_layout(level_data.get("player_one")), "player_one"
         )
+        self.bomb_group = pygame.sprite.Group()
 
     @staticmethod
     def create_tile_group(layout: list, asset_type: str) -> pygame.sprite.Group:
@@ -90,3 +91,12 @@ class Level:
         )
         self.player_one.update(all_obstacles)
         self.player_one.draw(self.display_surface)
+
+        # Bomb
+        p = self.player_one.sprites()[0]
+        if p.has_triggered_bomb:
+            b = Bomb((p.rect.x, p.rect.y))
+            self.bomb_group.add(b)
+            p.has_triggered_bomb = False
+        self.bomb_group.draw(self.display_surface)
+        self.bomb_group.update()

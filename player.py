@@ -1,6 +1,6 @@
 import pygame as py
 
-from game_settings import ASSET_FOLDER, TILE_SIZE
+from game_settings import ASSET_FOLDER
 from utils import import_sprites
 
 
@@ -10,15 +10,16 @@ class Player(py.sprite.Sprite):
         self.all_sprites = import_sprites(f"{ASSET_FOLDER}/tilesets/player_one.png")
         self.animations = self.set_animation_sprites()
         self.image: py.Surface = self.animations["idle"]
-        self.rect = py.Rect(position[0], position[1], TILE_SIZE - 4, TILE_SIZE - 4)
+        self.rect = self.image.get_rect(topleft=position)
         self.direction = py.math.Vector2(0, 0)
         self.face_right = False
         self.face_left = False
         self.face_down = False
         self.face_up = False
-        self.movement_speed = 2
+        self.movement_speed = 4
         self.frame_index = 0
         self.animation_speed = 0.15
+        self.has_triggered_bomb = False
 
     def set_animation_sprites(
         self,
@@ -102,9 +103,44 @@ class Player(py.sprite.Sprite):
             elif self.direction.y < 0:
                 self.rect.top = tile.rect.bottom
 
+    def set_bomb(self):
+        key_state = py.key.get_pressed()
+
+        if key_state[py.K_SPACE]:
+            print("SPACE PRESSED")
+            self.has_triggered_bomb = True
+
     def update(self, obstacles: list):
         """
         Get key input to set the direction, then move
         """
         self.set_direction()
+        self.set_bomb()
         self.move(obstacles)
+
+
+class Bomb(py.sprite.Sprite):
+    def __init__(self, position: tuple):
+        super().__init__()
+        self.all_sprites = import_sprites(f"{ASSET_FOLDER}/tilesets/bomb.png")
+        # self.animations = self.set_animation_sprites()
+        self.image: py.Surface = self.all_sprites[0]
+        self.rect = self.image.get_rect(topleft=position)
+        self.timer = 300  # 5 seconds (at 60 frames per second)
+        self.effect_area = 2
+        self.has_exploded = False
+
+    def explode(self):
+        if self.has_exploded:
+            self.kill()
+            self.has_exploded = False
+        elif self.timer == 0:
+            self.has_exploded = True
+            # set explosion animation
+        else:
+            self.timer -= 1
+            # go through animation cycle
+
+    def update(self):
+        print(f"Explodes in {self.timer}")
+        self.explode()
