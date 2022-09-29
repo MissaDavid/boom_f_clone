@@ -1,6 +1,6 @@
 import pygame as py
 
-from game_settings import ASSET_FOLDER
+from game_settings import ASSET_FOLDER, FPS
 from utils import import_sprites
 
 
@@ -12,13 +12,13 @@ class Player(py.sprite.Sprite):
         self.image: py.Surface = self.animations["idle"]
         self.rect = self.image.get_rect(topleft=position)
         self.direction = py.math.Vector2(0, 0)
-        self.face_right = False
-        self.face_left = False
-        self.face_down = False
-        self.face_up = False
+        # self.face_right = False
+        # self.face_left = False
+        # self.face_down = False
+        # self.face_up = False
         self.movement_speed = 4
         self.frame_index = 0
-        self.animation_speed = 0.15
+        self.animation_speed = 0.5
         self.has_triggered_bomb = False
 
     def set_animation_sprites(
@@ -26,11 +26,11 @@ class Player(py.sprite.Sprite):
     ) -> dict:
         return {
             "idle": self.all_sprites[0],
-            "walk_down": self.all_sprites[1:7],
-            "walk_up": self.all_sprites[8:15],
-            "walk_right": self.all_sprites[16:23],
-            "walk_left": self.all_sprites[24:31],
-            "loser": self.all_sprites[32:34],
+            "walk_down": self.all_sprites[1:8],
+            "walk_up": self.all_sprites[8:16],
+            "walk_right": self.all_sprites[16:24],
+            "walk_left": self.all_sprites[24:32],
+            "loser": self.all_sprites[32:35],
             "winner": self.all_sprites[35:],
         }
 
@@ -49,10 +49,10 @@ class Player(py.sprite.Sprite):
         self.direction.x = key_state[py.K_RIGHT] - key_state[py.K_LEFT]
         self.direction.y = key_state[py.K_DOWN] - key_state[py.K_UP]
 
-        self.face_right = True if self.direction.x == 1 else False
-        self.face_left = True if self.direction.x == -1 else False
-        self.face_up = True if self.direction.y == -1 else False
-        self.face_down = True if self.direction.y == 1 else False
+        # self.face_right = True if self.direction.x == 1 else False
+        # self.face_left = True if self.direction.x == -1 else False
+        # self.face_up = True if self.direction.y == -1 else False
+        # self.face_down = True if self.direction.y == 1 else False
 
     def animate(self):
         if self.direction == [0, 0]:
@@ -142,5 +142,4 @@ class Bomb(py.sprite.Sprite):
             # go through animation cycle
 
     def update(self):
-        print(f"Explodes in {self.timer}")
         self.explode()
