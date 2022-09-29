@@ -96,7 +96,8 @@ class Level:
         p = self.player_one.sprites()[0]
         if p.has_triggered_bomb:
             b = Bomb((p.rect.x, p.rect.y))
-            self.bomb_group.add(b)
+            if not pygame.sprite.spritecollideany(b, self.bomb_group):
+                self.bomb_group.add(b)
             p.has_triggered_bomb = False
         self.bomb_group.draw(self.display_surface)
         self.bomb_group.update()
