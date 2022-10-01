@@ -1,6 +1,6 @@
 import pygame as py
 
-from game_settings import ASSET_FOLDER, FPS
+from game_settings import ASSET_FOLDER
 from utils import import_sprites
 
 
@@ -117,58 +117,3 @@ class Player(py.sprite.Sprite):
         self.set_direction()
         self.set_bomb()
         self.move(obstacles)
-
-
-class Bomb(py.sprite.Sprite):
-    def __init__(self, position: tuple):
-        super().__init__()
-        self.bomb_sprites = import_sprites(f"{ASSET_FOLDER}/tilesets/bomb.png")
-        self.explosion_sprites = import_sprites(
-            f"{ASSET_FOLDER}/tilesets/explosion.png"
-        )
-        self.animations = self.set_animation_sprites()
-        self.image: py.Surface = self.bomb_sprites[0]
-        self.rect = self.image.get_rect(topleft=position)
-        self.bomb_timer = 4 * FPS  # 4 secs
-        self.explosion_duration = FPS  # 1 sec
-        # self.max_effect_area = 3
-        self.has_exploded = False
-        self.frame_index = 0
-        self.bomb_speed = 0.5
-        self.explosion_speed = 0.75
-
-    def set_animation_sprites(
-        self,
-    ) -> dict:
-        return {
-            "step_one": self.bomb_sprites[0:2],
-            "step_two": self.bomb_sprites[1:],
-            "explosion": self.explosion_sprites[0:4],
-        }
-
-    def animate_explosion(self):
-        if self.explosion_duration == 0:
-            self.has_exploded = True
-        else:
-            self.explosion_duration -= 7.5
-            self.frame_index += self.explosion_speed
-            self.image = self.animations["explosion"][int(self.frame_index)]
-
-    def explode(self):
-        if self.has_exploded:
-            self.kill()
-            self.has_exploded = False
-        elif self.bomb_timer == 0:
-            self.animate_explosion()
-        else:
-            self.bomb_timer -= 1
-            self.frame_index += self.bomb_speed
-            if self.frame_index >= 2:
-                self.frame_index = 0
-            if self.bomb_timer <= 40:
-                self.image = self.animations["step_two"][int(self.frame_index)]
-            else:
-                self.image = self.animations["step_one"][int(self.frame_index)]
-
-    def update(self):
-        self.explode()
