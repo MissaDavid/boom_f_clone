@@ -1,6 +1,6 @@
 import pygame
 
-from bomb import Dispersion, Bomb
+from bomb import Bomb
 from game_settings import TILE_SIZE, ASSET_FOLDER
 from player import Player
 from tile import Interactive, Tile
@@ -34,7 +34,7 @@ class Level:
             import_csv_layout(level_data.get("breakables")), "breakable"
         )
         self.bomb_group = pygame.sprite.Group()
-        self.bomb_dispersion_group = pygame.sprite.Group()
+        self.tiles_to_destroy = pygame.sprite.Group()
 
         # Player
         self.player_one = self.create_tile_group(
@@ -76,13 +76,6 @@ class Level:
 
         return sprite_group
 
-    def set_bomb_dispersion(self, bomb) -> None:
-        up = Dispersion((bomb.rect.x, bomb.rect.y - TILE_SIZE))
-        down = Dispersion((bomb.rect.x, bomb.rect.y + TILE_SIZE))
-        left = Dispersion((bomb.rect.x - TILE_SIZE, bomb.rect.y))
-        right = Dispersion((bomb.rect.x + TILE_SIZE, bomb.rect.y))
-        self.bomb_dispersion_group.add([up, down, left, right])
-
     def can_set_bomb(self, x, y) -> bool:
         rect = pygame.Rect((x, y), (TILE_SIZE, TILE_SIZE))
         for sprite in self.bomb_group.sprites():
@@ -91,16 +84,18 @@ class Level:
 
         return True
 
-    def explode_breakables(self):
-        collisions = []
-        for hitbox in self.bomb_dispersion_group.sprites():
-            breakable = pygame.sprite.spritecollideany(hitbox, self.breakables)
-            if breakable:
-                collisions.append(breakable)
-
-        for block in collisions:
-            print(len(collisions))
-            block.update()
+    def set_breakables(self, bomb_x, bomb_y):
+        hitboxes = [
+            pygame.Rect(bomb_x - TILE_SIZE, bomb_y, TILE_SIZE, TILE_SIZE),
+            pygame.Rect(bomb_x + TILE_SIZE, bomb_y, TILE_SIZE, TILE_SIZE),
+            pygame.Rect(bomb_x, bomb_y - TILE_SIZE, TILE_SIZE, TILE_SIZE),
+            pygame.Rect(bomb_x, bomb_y + TILE_SIZE, TILE_SIZE, TILE_SIZE),
+        ]
+        for rect in hitboxes:
+            for sprite in self.breakables.sprites():
+                if rect.colliderect(sprite):
+                    print("collision with ", sprite)
+                    self.tiles_to_destroy.add(sprite)
 
     def run(self):
         """
@@ -128,8 +123,9 @@ class Level:
             if self.can_set_bomb(p.rect.x, p.rect.y):
                 b = Bomb((p.rect.x, p.rect.y))
                 self.bomb_group.add(b)
-                self.set_bomb_dispersion(b)
+                self.set_breakables(b.rect.x, b.rect.y)
 
         self.bomb_group.draw(self.display_surface)
-        self.bomb_group.update()
-        self.explode_breakables()
+        self.bomb_group.update(all_obstacles)
+
+        self.tiles_to_destroy.update()
