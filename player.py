@@ -1,6 +1,6 @@
 import pygame as py
 
-from game_settings import ASSET_FOLDER
+from game_settings import ASSET_FOLDER, FPS
 from utils import import_sprites
 
 
@@ -20,6 +20,9 @@ class Player(py.sprite.Sprite):
         self.frame_index = 0
         self.animation_speed = 0.5
         self.has_triggered_bomb = False
+        self.is_hit = False
+        self.life_points = 8
+        self.invincibility_timer = FPS
 
     def set_animation_sprites(
         self,
@@ -34,7 +37,7 @@ class Player(py.sprite.Sprite):
             "winner": self.all_sprites[35:],
         }
 
-    def set_direction(self):
+    def set_direction(self) -> None:
         """
         The Player's moving direction is a Vector2 representing x, y axis
         0, 0 represents the top left corner SO y axis is positive when going DOWN
@@ -53,6 +56,14 @@ class Player(py.sprite.Sprite):
         # self.face_left = True if self.direction.x == -1 else False
         # self.face_up = True if self.direction.y == -1 else False
         # self.face_down = True if self.direction.y == 1 else False
+
+    def remove_life_points(self, hit_points) -> None:
+        """
+        a Player has 8 life points at the start of the game
+        :param hit_points: number of life points to remove
+        """
+        if self.life_points > 0:
+            self.life_points -= hit_points
 
     def animate(self):
         if self.direction == [0, 0]:
@@ -110,10 +121,23 @@ class Player(py.sprite.Sprite):
             print("SPACE PRESSED")
             self.has_triggered_bomb = True
 
+    def temp_invincibility(self):
+        print(self.invincibility_timer)
+        if self.invincibility_timer == 0:
+            self.invincibility_timer = FPS
+            self.is_hit = False
+        else:
+            self.invincibility_timer -= 1
+
     def update(self, obstacles: list):
         """
         Get key input to set the direction, then move
         """
+        if self.life_points == 0:
+            self.kill()
+        if self.is_hit:
+            self.temp_invincibility()
+
         self.set_direction()
         self.set_bomb()
         self.move(obstacles)

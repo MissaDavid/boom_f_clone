@@ -33,7 +33,8 @@ class Level:
         self.breakables = self.create_tile_group(
             import_csv_layout(level_data.get("breakables")), "breakable"
         )
-        self.bomb_group = pygame.sprite.Group()
+        self.bombs = pygame.sprite.Group()
+        self.bomb_hitboxes = pygame.sprite.Group()
         self.tiles_to_destroy = pygame.sprite.Group()
 
         # Player
@@ -78,7 +79,7 @@ class Level:
 
     def can_set_bomb(self, x, y) -> bool:
         rect = pygame.Rect((x, y), (TILE_SIZE, TILE_SIZE))
-        for sprite in self.bomb_group.sprites():
+        for sprite in self.bombs.sprites():
             if rect.colliderect(sprite):
                 return False
 
@@ -96,6 +97,13 @@ class Level:
                 if rect.colliderect(sprite):
                     print("collision with ", sprite)
                     self.tiles_to_destroy.add(sprite)
+
+    def hit(self, player):
+        print("LIFE : ", player.life_points)
+        if pygame.sprite.spritecollideany(player, self.bomb_hitboxes):
+            if not player.is_hit:
+                player.is_hit = True
+                player.remove_life_points(1)
 
     def run(self):
         """
@@ -122,10 +130,13 @@ class Level:
             p.has_triggered_bomb = False
             if self.can_set_bomb(p.rect.x, p.rect.y):
                 b = Bomb((p.rect.x, p.rect.y))
-                self.bomb_group.add(b)
+                self.bombs.add(b)
                 self.set_breakables(b.rect.x, b.rect.y)
 
-        self.bomb_group.draw(self.display_surface)
-        self.bomb_group.update(all_obstacles)
-
+        self.bombs.draw(self.display_surface)
+        self.bombs.update(all_obstacles)
+        for bomb in self.bombs.sprites():
+            self.bomb_hitboxes.add(*bomb.explosion_group)
+        self.hit(p)
+        self.bomb_hitboxes.empty()
         self.tiles_to_destroy.update()
