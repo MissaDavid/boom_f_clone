@@ -39,5 +39,13 @@ def import_sprites(file) -> list[pygame.Surface]:
 
 
 def rect_has_collision(rect: pygame.Rect, obstacles: list[pygame.sprite.Group]) -> bool:
+    """
+    :param rect: a Rect
+    :param obstacles: Group of sprites to check collisions with
+    :return: bool True at the first collision found, else False
+    """
     for sprite in obstacles:
-        return rect.colliderect(sprite)
+        if rect.colliderect(sprite):
+            return True
+
+    return False
