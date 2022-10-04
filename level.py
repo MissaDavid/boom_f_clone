@@ -99,7 +99,6 @@ class Level:
                     self.tiles_to_destroy.add(sprite)
 
     def hit(self, player):
-        print("LIFE : ", player.life_points)
         if pygame.sprite.spritecollideany(player, self.bomb_hitboxes):
             if not player.is_hit:
                 player.is_hit = True

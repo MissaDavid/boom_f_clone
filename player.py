@@ -23,6 +23,7 @@ class Player(py.sprite.Sprite):
         self.is_hit = False
         self.life_points = 8
         self.invincibility_timer = FPS
+        self.lose_animation_timer = FPS * 2
 
     def set_animation_sprites(
         self,
@@ -122,22 +123,31 @@ class Player(py.sprite.Sprite):
             self.has_triggered_bomb = True
 
     def temp_invincibility(self):
-        print(self.invincibility_timer)
         if self.invincibility_timer == 0:
             self.invincibility_timer = FPS
             self.is_hit = False
         else:
             self.invincibility_timer -= 1
 
+    def death_animation(self):
+        if self.lose_animation_timer == 0:
+            return
+
+        self.lose_animation_timer -= 1
+        self.frame_index += self.animation_speed
+        if self.frame_index >= len(self.animations["loser"]):
+            self.frame_index = 0
+        self.image = self.animations["loser"][int(self.frame_index)]
+
     def update(self, obstacles: list):
         """
         Get key input to set the direction, then move
         """
         if self.life_points == 0:
-            self.kill()
-        if self.is_hit:
-            self.temp_invincibility()
-
-        self.set_direction()
-        self.set_bomb()
-        self.move(obstacles)
+            self.death_animation()
+        else:
+            if self.is_hit:
+                self.temp_invincibility()
+            self.set_direction()
+            self.set_bomb()
+            self.move(obstacles)
