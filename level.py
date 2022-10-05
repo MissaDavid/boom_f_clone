@@ -1,10 +1,10 @@
 import pygame
 
 from bomb import Bomb
-from game_settings import TILE_SIZE, ASSET_FOLDER
+from game_settings import TILE_SIZE
 from player import Player
 from tile import Interactive, Tile
-from utils import import_csv_layout, import_sprites
+from utils import create_tile_group_for_asset
 
 
 class Level:
@@ -19,63 +19,26 @@ class Level:
         # read tileset and create group for every layer of the level
 
         # Static Tiles
-        self.border = self.create_tile_group(
-            import_csv_layout(level_data.get("border")), "border1"
+        self.border = create_tile_group_for_asset(
+            level_data.get("border"), "border1", Tile
         )
-        self.background = self.create_tile_group(
-            import_csv_layout(level_data.get("background")), "bg1"
+        self.background = create_tile_group_for_asset(
+            level_data.get("background"), "bg1", Tile
         )
-        self.fixed = self.create_tile_group(
-            import_csv_layout(level_data.get("fixed")), "fixed"
-        )
+        self.fixed = create_tile_group_for_asset(level_data.get("fixed"), "fixed", Tile)
 
         # Interactive Tiles
-        self.breakables = self.create_tile_group(
-            import_csv_layout(level_data.get("breakables")), "breakable"
+        self.breakables = create_tile_group_for_asset(
+            level_data.get("breakables"), "breakable", Interactive
         )
         self.bombs = pygame.sprite.Group()
         self.bomb_hitboxes = pygame.sprite.Group()
         self.tiles_to_destroy = pygame.sprite.Group()
 
         # Player
-        self.player_one = self.create_tile_group(
-            import_csv_layout(level_data.get("player_one")), "player_one"
+        self.player_one = create_tile_group_for_asset(
+            level_data.get("player_one"), "player_one", Player, True
         )
-
-    @staticmethod
-    def create_tile_group(layout: list, asset_type: str) -> pygame.sprite.Group:
-        """
-        Each csv file gives us a relative position for each tile
-        x = col * tile size
-        y = row * tile size
-
-        :returns:
-        A group of tile sprites with their coordinates and image loaded
-        """
-        if asset_type == "player_one":
-            sprite_group = pygame.sprite.GroupSingle()
-        else:
-            sprite_group = pygame.sprite.Group()
-
-        for row_index, row in enumerate(layout):
-            for col_index, val in enumerate(row):
-                if val != "-1":  # empty cell
-                    x = col_index * TILE_SIZE
-                    y = row_index * TILE_SIZE
-
-                    sprites = import_sprites(
-                        f"{ASSET_FOLDER}/tilesets/{asset_type}.png"
-                    )
-                    current_sprite = sprites[int(val)]
-
-                    if asset_type == "player_one":
-                        sprite_group.add(Player((x, y)))
-                    elif asset_type == "breakable":
-                        sprite_group.add(Interactive((x, y), current_sprite))
-                    else:
-                        sprite_group.add(Tile((x, y), current_sprite))
-
-        return sprite_group
 
     def can_set_bomb(self, x, y) -> bool:
         rect = pygame.Rect((x, y), (TILE_SIZE, TILE_SIZE))

@@ -2,7 +2,7 @@ import csv
 
 import pygame
 
-from game_settings import TILE_SIZE
+from game_settings import TILE_SIZE, ASSET_FOLDER
 
 
 def import_csv_layout(file) -> list:
@@ -49,3 +49,42 @@ def rect_has_collision(rect: pygame.Rect, obstacles: list[pygame.sprite.Group]) 
             return True
 
     return False
+
+
+def create_tile_group_for_asset(
+    layout_file: str, asset_name: str, sprite_cls, is_single_group: bool = False
+) -> pygame.sprite.Group:
+    """
+    This util will import every sprite of a tileset and create a Group containing these sprites
+    based on the desired class. It is possible to create a GroupSingle but this function will assume
+    that you don't need to pass the current_sprite to the sprite_cls.
+
+    Each csv file (layout file) gives us a relative position for each tile
+        x = col * tile size
+        y = row * tile size
+
+    :param layout_file: the csv file name for a layout
+    :param asset_name: the name of the file for that asset image
+    :param sprite_cls: the sprite class that will make use of that asset
+    :param is_single_group: boolean to know the type of group to create
+
+    :return: A group of tile sprites with their coordinates and image loaded
+    """
+    layout = import_csv_layout(layout_file)
+    group = pygame.sprite.GroupSingle() if is_single_group else pygame.sprite.Group()
+
+    for row_index, row in enumerate(layout):
+        for col_index, val in enumerate(row):
+            if val != "-1":  # empty cell
+                x = col_index * TILE_SIZE
+                y = row_index * TILE_SIZE
+
+                sprites = import_sprites(f"{ASSET_FOLDER}/tilesets/{asset_name}.png")
+                current_sprite = sprites[int(val)]
+
+                if is_single_group:
+                    group.add(sprite_cls((x, y)))
+                else:
+                    group.add(sprite_cls((x, y), current_sprite))
+
+    return group
