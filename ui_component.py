@@ -29,7 +29,7 @@ class UIComponent(py.sprite.Sprite):
 
         default_image = create_surface_with_text(text, font_size, text_rgb, bg_rgb)
         highlighted_image = create_surface_with_text(
-            text, int(font_size * 1.2), text_rgb, bg_rgb
+            text, int(font_size * 1.1), text_rgb, bg_rgb
         )
         # add both images and their rects to lists
         self.images = [default_image, highlighted_image]

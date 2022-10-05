@@ -11,11 +11,12 @@ FPS = 30
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+BLUE = (0, 63, 229)
 
 TOP_LEVEL_DIR = os.path.join(os.getcwd())
 ASSET_FOLDER = f"{TOP_LEVEL_DIR}/assets"
 
-
+TITLE_SCREEN_DICT = {"background": f"{ASSET_FOLDER}/layouts/title_screen.csv"}
 LEVEL_ONE_DICT = {
     "border": f"{ASSET_FOLDER}/layouts/level_one_border.csv",
     "background": f"{ASSET_FOLDER}/layouts/level_one_background.csv",
