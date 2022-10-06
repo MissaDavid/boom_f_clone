@@ -19,6 +19,7 @@ class Level:
         # read tileset and create group for every layer of the level
 
         # Static Tiles
+        self.panel = create_tile_group_for_asset(level_data.get("panel"), "panel", Tile)
         self.border = create_tile_group_for_asset(
             level_data.get("border"), "border1", Tile
         )
@@ -75,6 +76,7 @@ class Level:
         self.border.draw(self.display_surface)
         self.background.draw(self.display_surface)
         self.fixed.draw(self.display_surface)
+        self.panel.draw(self.display_surface)
 
         # interactive tiles drawing
         self.breakables.draw(self.display_surface)
