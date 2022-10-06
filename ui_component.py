@@ -34,7 +34,7 @@ class UIComponent(py.sprite.Sprite):
         # add both images and their rects to lists
         self.images = [default_image, highlighted_image]
         self.rects = [
-            default_image.get_rect(topleft=position),
+            default_image.get_rect(center=position),
             highlighted_image.get_rect(center=position),
         ]
         self.mouse_over = False

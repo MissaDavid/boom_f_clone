@@ -31,7 +31,7 @@ class Game:
 
     def show_title_screen(self):
         new_game_btn = UIComponent(
-            position=(200, 240),
+            position=(WIDTH / 2, HEIGHT / 2),
             font_size=int(26),
             text=GameState.NEW_GAME.value,
             text_rgb=WHITE,
@@ -39,7 +39,7 @@ class Game:
             action=GameState.NEW_GAME,
         )
         quit_btn = UIComponent(
-            position=(200, 350),
+            position=(WIDTH / 2, HEIGHT / 1.5),
             font_size=int(26),
             text=GameState.QUIT.value,
             text_rgb=WHITE,
