@@ -66,14 +66,27 @@ class Game:
             self.clock.tick(FPS)
 
     def play(self, level):
+        back_btn = UIComponent(
+            position=(50, HEIGHT - 25),
+            font_size=int(10),
+            text=str(GameState.TITLE.value),
+            text_rgb=WHITE,
+            action=GameState.TITLE,
+        )
         while True:
+            mouse_up = False
             for event in py.event.get():
                 if event.type == py.QUIT:
                     py.quit()
                     sys.exit()
+                if event.type == py.MOUSEBUTTONUP:
+                    mouse_up = True
+
+            if action := back_btn.update(py.mouse.get_pos(), mouse_up):
+                return action
 
             self.screen.fill(BLACK)
-            level.run()
+            level.run(back_btn)
 
             py.display.update()
             self.clock.tick(FPS)
@@ -88,7 +101,7 @@ class Game:
                 self.game_state = self.show_title_screen()
 
             if self.game_state == GameState.NEW_GAME:
-                self.play(self.level)
+                self.game_state = self.play(self.level)
 
             if self.game_state == GameState.QUIT:
                 logger.info("Quitting game...")

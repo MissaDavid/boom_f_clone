@@ -68,7 +68,7 @@ class Level:
                 player.is_hit = True
                 player.remove_life_points(1)
 
-    def run(self):
+    def run(self, button):
         """
         Update and draw sprites
         """
@@ -87,6 +87,9 @@ class Level:
         )
         self.player_one.update(all_obstacles)
         self.player_one.draw(self.display_surface)
+
+        # Back to main menu button
+        self.display_surface.blit(button.image, button.rect)
 
         # Bomb drawing and update
         p = self.player_one.sprites()[0]
