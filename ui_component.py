@@ -21,8 +21,8 @@ class UIComponent(py.sprite.Sprite):
         position: tuple,
         text: str,
         font_size: int,
-        bg_rgb: tuple,
         text_rgb: tuple,
+        bg_rgb: tuple = None,
         action: GameState = None,
     ):
         super().__init__()

@@ -8,7 +8,6 @@ from game_settings import (
     LEVEL_ONE_DICT,
     WHITE,
     BLACK,
-    BLUE,
     FPS,
     GameState,
     TITLE_SCREEN_DICT,
@@ -33,17 +32,15 @@ class Game:
         new_game_btn = UIComponent(
             position=(WIDTH / 2, HEIGHT / 1.5),
             font_size=int(26),
-            text=GameState.NEW_GAME.value,
+            text=str(GameState.NEW_GAME.value),
             text_rgb=WHITE,
-            bg_rgb=BLUE,
             action=GameState.NEW_GAME,
         )
         quit_btn = UIComponent(
             position=(WIDTH / 2, HEIGHT / 1.2),
             font_size=int(26),
-            text=GameState.QUIT.value,
+            text=str(GameState.QUIT.value),
             text_rgb=WHITE,
-            bg_rgb=BLUE,
             action=GameState.QUIT,
         )
 
@@ -85,7 +82,7 @@ class Game:
         py.display.set_caption("BOOM F")
 
         while True:
-            print(f"Running {self.game_state}")
+            print(f"Running {self.game_state.value}")
 
             if self.game_state == GameState.TITLE:
                 self.game_state = self.show_title_screen()

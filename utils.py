@@ -72,7 +72,7 @@ def create_tile_group_for_asset(
     """
     layout = import_csv_layout(layout_file)
     group = pygame.sprite.GroupSingle() if is_single_group else pygame.sprite.Group()
-
+    print(f"Loading asset --> {asset_name}")
     for row_index, row in enumerate(layout):
         for col_index, val in enumerate(row):
             if val != "-1":  # empty cell
