@@ -92,7 +92,7 @@ class Game:
             self.clock.tick(FPS)
 
     def run(self):
-        py.display.set_caption("BOOM F")
+        py.display.set_caption("BOOM Clone")
 
         while True:
             print(f"Running {self.game_state.value}")
