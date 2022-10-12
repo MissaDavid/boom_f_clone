@@ -1,6 +1,7 @@
 import pygame
 
 from bomb import Bomb
+from enemy import Enemy
 from game_settings import TILE_SIZE
 from player import Player
 from tile import Interactive, Tile
@@ -39,6 +40,11 @@ class Level:
         # Player
         self.player_one = create_tile_group_for_asset(
             level_data.get("player_one"), "player_one", Player, True
+        )
+
+        # Enemies
+        self.enemies = create_tile_group_for_asset(
+            level_data.get("enemies"), "enemy1", Enemy
         )
 
     def can_set_bomb(self, x, y) -> bool:
@@ -87,6 +93,10 @@ class Level:
         )
         self.player_one.update(all_obstacles)
         self.player_one.draw(self.display_surface)
+
+        # Enemies drawing and update
+        self.enemies.draw(self.display_surface)
+        self.enemies.update()
 
         # Back to main menu button
         self.display_surface.blit(button.image, button.rect)
