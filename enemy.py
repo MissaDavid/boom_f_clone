@@ -1,31 +1,22 @@
+from random import choice
+
 import pygame as py
 
-from game_settings import ASSET_FOLDER, FPS
+from base_character import Character
+from game_settings import ASSET_FOLDER
 from utils import import_sprites
 
 
-class Character(py.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-
-
-class Enemy(py.sprite.Sprite):
-    def __init__(self, position: tuple, sprite):
-        super().__init__()
+class Enemy(Character):
+    def __init__(self, position: tuple, sprite: py.Surface):
+        super().__init__(position, sprite)
         self.all_sprites = import_sprites(f"{ASSET_FOLDER}/tilesets/enemy1.png")
         self.animations = self.set_animation_sprites()
-        self.image = sprite
-        self.rect = self.image.get_rect(topleft=position)
-        self.direction = py.math.Vector2(0, 0)
         self.face_right = False
         self.face_left = False
         self.face_down = False
         self.face_up = False
-        self.movement_speed = 4
-        self.frame_index = 0
-        self.animation_speed = 0.5
-        self.is_hit = False
-        self.lose_animation_timer = FPS * 2
+        self.movement_speed = 1.2
 
     def set_animation_sprites(
         self,
@@ -42,31 +33,20 @@ class Enemy(py.sprite.Sprite):
             "loser": self.all_sprites[20:],
         }
 
-    def animate(self):
-        self.frame_index += self.animation_speed
-        if self.direction.x < 0:
-            if self.frame_index >= len(self.animations["walk_left"]):
-                self.frame_index = 0
-            self.image = self.animations["walk_left"][int(self.frame_index)]
-        if self.direction.x > 0:
-            if self.frame_index >= len(self.animations["walk_right"]):
-                self.frame_index = 0
-            self.image = self.animations["walk_right"][int(self.frame_index)]
-        if self.direction.y > 0:
-            if self.frame_index >= len(self.animations["walk_down"]):
-                self.frame_index = 0
-            self.image = self.animations["walk_down"][int(self.frame_index)]
-        elif self.direction.y < 0:
-            if self.frame_index >= len(self.animations["walk_up"]):
-                self.frame_index = 0
-            self.image = self.animations["walk_up"][int(self.frame_index)]
+    def set_direction(self) -> None:
+        """
+        Randomly choose the direction
+        """
+        keys = [py.K_LEFT, py.K_RIGHT, py.K_DOWN, py.K_UP]
+        pressed = choice(keys)
 
-    def move(self):
-        """Randomly move left / right / up / down if no obstacles"""
-        self.animate()
+        self.direction.x = 1 if pressed in [py.K_LEFT, py.K_RIGHT] else 0
+        self.direction.y = 1 if pressed in [py.K_DOWN, py.K_UP] else 0
 
     def shoot(self):
         ...
 
-    def update(self) -> None:
-        ...
+    def update(self, obstacles: list) -> None:
+        self.set_direction()
+        self.animate_walking(self.animations)
+        self.move(obstacles)

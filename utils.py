@@ -81,10 +81,6 @@ def create_tile_group_for_asset(
 
                 sprites = import_sprites(f"{ASSET_FOLDER}/tilesets/{asset_name}.png")
                 current_sprite = sprites[int(val)]
-
-                if is_single_group:
-                    group.add(sprite_cls((x, y)))
-                else:
-                    group.add(sprite_cls((x, y), current_sprite))
+                group.add(sprite_cls((x, y), current_sprite))
 
     return group

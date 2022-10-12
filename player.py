@@ -1,29 +1,18 @@
 import pygame as py
 
+from base_character import Character
 from game_settings import ASSET_FOLDER, FPS
 from utils import import_sprites
 
 
-class Player(py.sprite.Sprite):
-    def __init__(self, position: tuple):
-        super().__init__()
+class Player(Character):
+    def __init__(self, position: tuple, sprite: py.Surface):
+        super().__init__(position, sprite)
         self.all_sprites = import_sprites(f"{ASSET_FOLDER}/tilesets/player_one.png")
         self.animations = self.set_animation_sprites()
-        self.image: py.Surface = self.animations["idle"]
-        self.rect = self.image.get_rect(topleft=position)
-        self.direction = py.math.Vector2(0, 0)
-        # self.face_right = False
-        # self.face_left = False
-        # self.face_down = False
-        # self.face_up = False
-        self.movement_speed = 4
-        self.frame_index = 0
-        self.animation_speed = 0.5
         self.has_triggered_bomb = False
-        self.is_hit = False
         self.life_points = 8
         self.invincibility_timer = FPS
-        self.lose_animation_timer = FPS * 2
 
     def set_animation_sprites(
         self,
@@ -53,11 +42,6 @@ class Player(py.sprite.Sprite):
         self.direction.x = key_state[py.K_RIGHT] - key_state[py.K_LEFT]
         self.direction.y = key_state[py.K_DOWN] - key_state[py.K_UP]
 
-        # self.face_right = True if self.direction.x == 1 else False
-        # self.face_left = True if self.direction.x == -1 else False
-        # self.face_up = True if self.direction.y == -1 else False
-        # self.face_down = True if self.direction.y == 1 else False
-
     def remove_life_points(self, hit_points) -> None:
         """
         a Player has 8 life points at the start of the game
@@ -65,55 +49,6 @@ class Player(py.sprite.Sprite):
         """
         if self.life_points > 0:
             self.life_points -= hit_points
-
-    def animate(self):
-        if self.direction == [0, 0]:
-            self.image = self.animations["idle"]
-
-        self.frame_index += self.animation_speed
-        if self.direction.x < 0:
-            if self.frame_index >= len(self.animations["walk_left"]):
-                self.frame_index = 0
-            self.image = self.animations["walk_left"][int(self.frame_index)]
-        if self.direction.x > 0:
-            if self.frame_index >= len(self.animations["walk_right"]):
-                self.frame_index = 0
-            self.image = self.animations["walk_right"][int(self.frame_index)]
-        if self.direction.y > 0:
-            if self.frame_index >= len(self.animations["walk_down"]):
-                self.frame_index = 0
-            self.image = self.animations["walk_down"][int(self.frame_index)]
-        elif self.direction.y < 0:
-            if self.frame_index >= len(self.animations["walk_up"]):
-                self.frame_index = 0
-            self.image = self.animations["walk_up"][int(self.frame_index)]
-
-    def get_collisions(self, obstacles):
-        collisions = []
-        for sprite in obstacles:
-            if self.rect.colliderect(sprite):
-                collisions.append(sprite)
-
-        return collisions
-
-    def move(self, obstacles):
-        self.animate()
-
-        self.rect.x += self.direction.x * self.movement_speed
-        collisions = self.get_collisions(obstacles)
-        for tile in collisions:
-            if self.direction.x < 0:
-                self.rect.left = tile.rect.right
-            elif self.direction.x > 0:
-                self.rect.right = tile.rect.left
-
-        self.rect.y += self.direction.y * self.movement_speed
-        collisions = self.get_collisions(obstacles)
-        for tile in collisions:
-            if self.direction.y > 0:
-                self.rect.bottom = tile.rect.top
-            elif self.direction.y < 0:
-                self.rect.top = tile.rect.bottom
 
     def set_bomb(self):
         key_state = py.key.get_pressed()
@@ -150,4 +85,5 @@ class Player(py.sprite.Sprite):
                 self.temp_invincibility()
             self.set_direction()
             self.set_bomb()
+            self.animate_walking(self.animations, True)
             self.move(obstacles)
