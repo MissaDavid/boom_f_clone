@@ -1,5 +1,3 @@
-from random import choice
-
 import pygame as py
 
 from base_character import Character
@@ -12,11 +10,13 @@ class Enemy(Character):
         super().__init__(position, sprite)
         self.all_sprites = import_sprites(f"{ASSET_FOLDER}/tilesets/enemy1.png")
         self.animations = self.set_animation_sprites()
-        self.face_right = False
-        self.face_left = False
-        self.face_down = False
-        self.face_up = False
-        self.movement_speed = 1.2
+        self.K_RIGHT = False
+        self.K_LEFT = False
+        self.K_DOWN = False
+        self.K_UP = False
+        self.movement_speed = 0.9
+        self.animation_speed = 0.3
+        self.steps = 0
 
     def set_animation_sprites(
         self,
@@ -33,20 +33,9 @@ class Enemy(Character):
             "loser": self.all_sprites[20:],
         }
 
-    def set_direction(self) -> None:
-        """
-        Randomly choose the direction
-        """
-        keys = [py.K_LEFT, py.K_RIGHT, py.K_DOWN, py.K_UP]
-        pressed = choice(keys)
-
-        self.direction.x = 1 if pressed in [py.K_LEFT, py.K_RIGHT] else 0
-        self.direction.y = 1 if pressed in [py.K_DOWN, py.K_UP] else 0
-
     def shoot(self):
         ...
 
     def update(self, obstacles: list) -> None:
-        self.set_direction()
         self.animate_walking(self.animations)
         self.move(obstacles)

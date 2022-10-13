@@ -1,11 +1,13 @@
+from random import choice
+
 import pygame
 
 from bomb import Bomb
 from enemy import Enemy
-from game_settings import TILE_SIZE
+from game_settings import TILE_SIZE, FPS
 from player import Player
 from tile import Interactive, Tile
-from utils import create_tile_group_for_asset
+from utils import create_tile_group_for_asset, rect_has_collision
 
 
 class Level:
@@ -74,6 +76,47 @@ class Level:
                 player.is_hit = True
                 player.remove_life_points(1)
 
+    @staticmethod
+    def set_enemy_direction(enemy, obstacles) -> None:
+        """
+        Randomly choose the direction
+        """
+        keys = [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP]
+        has_collided = rect_has_collision(enemy.rect, obstacles)
+        if not enemy.steps == 0 and not has_collided:
+            enemy.steps -= 1
+        # elif enemy.steps > 0 and has_collided:
+        #     ...
+        else:
+            pressed = choice(keys)
+
+            # reset enemy direction variables
+            directions = [
+                enemy.K_RIGHT,
+                enemy.K_LEFT,
+                enemy.K_DOWN,
+                enemy.K_UP,
+            ]
+            directions[:] = [False for _ in directions]
+            enemy.direction.x = 0
+            enemy.direction.y = 0
+
+            match pressed:
+                case pygame.K_RIGHT:
+                    enemy.direction.x = 1
+                    enemy.K_RIGHT = True
+                case pygame.K_LEFT:
+                    enemy.direction.x = -1
+                    enemy.K_LEFT = True
+                case pygame.K_DOWN:
+                    enemy.direction.y = 1
+                    enemy.K_DOWN = True
+                case pygame.K_UP:
+                    enemy.direction.y = -1
+                    enemy.K_UP = True
+
+            enemy.steps = FPS
+
     def run(self, button):
         """
         Update and draw sprites
@@ -95,6 +138,8 @@ class Level:
         self.player_one.draw(self.display_surface)
 
         # Enemies drawing and update
+        for enemy in self.enemies.sprites():
+            self.set_enemy_direction(enemy, all_obstacles)
         self.enemies.update(all_obstacles)
         self.enemies.draw(self.display_surface)
 
