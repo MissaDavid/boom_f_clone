@@ -2,7 +2,7 @@ import pygame as py
 
 from base_character import Character
 from game_settings import ASSET_FOLDER
-from utils import import_sprites
+from utils import import_sprites, Direction
 
 
 class Enemy(Character):
@@ -10,13 +10,10 @@ class Enemy(Character):
         super().__init__(position, sprite)
         self.all_sprites = import_sprites(f"{ASSET_FOLDER}/tilesets/enemy1.png")
         self.animations = self.set_animation_sprites()
-        self.K_RIGHT = False
-        self.K_LEFT = False
-        self.K_DOWN = False
-        self.K_UP = False
         self.movement_speed = 0.9
         self.animation_speed = 0.3
         self.steps = 0
+        self.facing_direction: Direction = Direction.K_LEFT
 
     def set_animation_sprites(
         self,
