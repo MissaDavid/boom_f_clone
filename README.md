@@ -10,9 +10,14 @@ Running the game
 
 This should open a new window (currently not resizable) :
 ![img.png](assets/menu_screenshot.png)
+
+Click `New Game` to start.
+
 ![img.png](assets/in_game_image.png)
-Click "New Game" to start. Press SPACE to place a bomb. You can explode all pink blocks, but you can't kill enemies, and
+
+Press the `SPACE` bar to place a bomb. You can explode all pink blocks, but you can't kill enemies, and
 enemies currently cannot hit you either!
+Click to `Title Screen` to go back.
 
 Main technologies
 ------------
@@ -24,6 +29,7 @@ Next steps
 ----------
 
 - enemies can shoot bullets
+- HUD
 - Player can pick up coins
 - soundtrack
 
