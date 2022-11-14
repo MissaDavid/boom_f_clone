@@ -1,16 +1,11 @@
-from random import choice
-
 import pygame
 
 from bomb import Bomb
 from enemy import Enemy
-from game_settings import TILE_SIZE, FPS
+from game_settings import TILE_SIZE
 from player import Player
 from tile import Interactive, Tile
-from utils import (
-    create_tile_group_for_asset,
-    Direction,
-)
+from utils import create_tile_group_for_asset
 
 
 class Level:
@@ -79,36 +74,6 @@ class Level:
                 player.is_hit = True
                 player.remove_life_points(1)
 
-    @staticmethod
-    def set_enemy_direction(enemy) -> None:
-        """
-        Randomly choose the direction
-        """
-        if not enemy.steps == 0:
-            enemy.steps -= 1
-        else:
-            pressed = choice(list(Direction))
-
-            # reset enemy direction variables
-            enemy.direction.x = 0
-            enemy.direction.y = 0
-
-            match pressed:
-                case Direction.K_RIGHT:
-                    enemy.direction.x = 1
-                    enemy.facing_direction = Direction.K_RIGHT
-                case Direction.K_LEFT:
-                    enemy.direction.x = -1
-                    enemy.facing_direction = Direction.K_LEFT
-                case Direction.K_DOWN:
-                    enemy.direction.y = 1
-                    enemy.facing_direction = Direction.K_DOWN
-                case Direction.K_UP:
-                    enemy.direction.y = -1
-                    enemy.facing_direction = Direction.K_UP
-
-            enemy.steps = FPS
-
     def run(self, button):
         """
         Update and draw sprites
@@ -130,8 +95,6 @@ class Level:
         self.player_one.draw(self.display_surface)
 
         # Enemies drawing and update
-        for enemy in self.enemies.sprites():
-            self.set_enemy_direction(enemy)
         self.enemies.update(all_obstacles)
         self.enemies.draw(self.display_surface)
 
