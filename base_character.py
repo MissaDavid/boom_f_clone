@@ -47,18 +47,20 @@ class Character(py.sprite.Sprite):
         return collisions
 
     def move(self, obstacles):
-        self.rect.x += self.direction.x * self.movement_speed
-        collisions = self.get_collisions(obstacles)
-        for tile in collisions:
-            if self.direction.x < 0:
-                self.rect.left = tile.rect.right
-            elif self.direction.x > 0:
-                self.rect.right = tile.rect.left
+        if self.direction.x != 0:
+            self.rect.x += self.direction.x * self.movement_speed
+            collisions = self.get_collisions(obstacles)
+            for tile in collisions:
+                if self.direction.x < 0:
+                    self.rect.left = tile.rect.right
+                elif self.direction.x > 0:
+                    self.rect.right = tile.rect.left
 
-        self.rect.y += self.direction.y * self.movement_speed
-        collisions = self.get_collisions(obstacles)
-        for tile in collisions:
-            if self.direction.y > 0:
-                self.rect.bottom = tile.rect.top
-            elif self.direction.y < 0:
-                self.rect.top = tile.rect.bottom
+        if self.direction.y != 0:
+            self.rect.y += self.direction.y * self.movement_speed
+            collisions = self.get_collisions(obstacles)
+            for tile in collisions:
+                if self.direction.y > 0:
+                    self.rect.bottom = tile.rect.top
+                elif self.direction.y < 0:
+                    self.rect.top = tile.rect.bottom
