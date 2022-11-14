@@ -38,29 +38,32 @@ class Character(py.sprite.Sprite):
                 self.frame_index = 0
             self.image = animations["walk_up"][int(self.frame_index)]
 
-    def get_collisions(self, obstacles):
-        collisions = []
+    def get_collision(self, obstacles):
         for sprite in obstacles:
             if self.rect.colliderect(sprite):
-                collisions.append(sprite)
+                return sprite
 
-        return collisions
+    def move(self, obstacles) -> None:
+        """
+        Move the character's rect
+        Check for a potential collision on each axis
 
-    def move(self, obstacles):
+        :param obstacles: list of all obstacle tiles
+        """
         if self.direction.x != 0:
             self.rect.x += self.direction.x * self.movement_speed
-            collisions = self.get_collisions(obstacles)
-            for tile in collisions:
+            collision = self.get_collision(obstacles)
+            if collision:
                 if self.direction.x < 0:
-                    self.rect.left = tile.rect.right
+                    self.rect.left = collision.rect.right
                 elif self.direction.x > 0:
-                    self.rect.right = tile.rect.left
+                    self.rect.right = collision.rect.left
 
         if self.direction.y != 0:
             self.rect.y += self.direction.y * self.movement_speed
-            collisions = self.get_collisions(obstacles)
-            for tile in collisions:
+            collision = self.get_collision(obstacles)
+            if collision:
                 if self.direction.y > 0:
-                    self.rect.bottom = tile.rect.top
+                    self.rect.bottom = collision.rect.top
                 elif self.direction.y < 0:
-                    self.rect.top = tile.rect.bottom
+                    self.rect.top = collision.rect.bottom
