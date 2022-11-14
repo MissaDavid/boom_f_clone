@@ -10,8 +10,9 @@ Running the game
 
 This should open a new window (currently not resizable) :
 ![img.png](assets/menu_screenshot.png)
-
-Click "New Game" to start. But right now there is no game to play :grimacing:
+![img.png](assets/in_game_image.png)
+Click "New Game" to start. Press SPACE to place a bomb. You can explode all pink blocks, but you can't kill enemies, and
+enemies currently cannot hit you either!
 
 Main technologies
 ------------
@@ -22,8 +23,8 @@ Main technologies
 Next steps
 ----------
 
-- enemies
-- coins
+- enemies can shoot bullets
+- Player can pick up coins
 - soundtrack
 
 I'm using conventional commits (see reference [here](https://www.conventionalcommits.org/en/v1.0.0/)).
