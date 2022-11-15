@@ -92,14 +92,3 @@ class Direction(Enum):
     K_RIGHT = 1073741903
     K_DOWN = 1073741905
     K_UP = 1073741906
-
-
-def get_opposite_direction(direction) -> Direction:
-    if direction == Direction.K_LEFT:
-        return Direction.K_RIGHT
-    if direction == Direction.K_RIGHT:
-        return Direction.K_LEFT
-    if direction == Direction.K_UP:
-        return Direction.K_DOWN
-    if direction == Direction.K_DOWN:
-        return Direction.K_UP
