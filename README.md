@@ -17,7 +17,7 @@ Click `New Game` to start.
 
 Press the `SPACE` bar to place a bomb. You can explode all pink blocks, but you can't kill enemies, and
 enemies currently cannot hit you either!
-Click to `Title Screen` to go back.
+Click `Title Screen` to go back.
 
 Main technologies
 ------------

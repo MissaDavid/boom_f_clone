@@ -1,6 +1,7 @@
 import pygame as py
 
 from game_settings import FPS
+from utils import get_collision
 
 
 class Character(py.sprite.Sprite):
@@ -38,11 +39,6 @@ class Character(py.sprite.Sprite):
                 self.frame_index = 0
             self.image = animations["walk_up"][int(self.frame_index)]
 
-    def get_collision(self, obstacles):
-        for sprite in obstacles:
-            if self.rect.colliderect(sprite):
-                return sprite
-
     def move(self, obstacles) -> None:
         """
         Move the character's rect
@@ -52,7 +48,7 @@ class Character(py.sprite.Sprite):
         """
         if self.direction.x != 0:
             self.rect.x += self.direction.x * self.movement_speed
-            collision = self.get_collision(obstacles)
+            collision = get_collision(self.rect, obstacles)
             if collision:
                 if self.direction.x < 0:
                     self.rect.left = collision.rect.right
@@ -61,7 +57,7 @@ class Character(py.sprite.Sprite):
 
         if self.direction.y != 0:
             self.rect.y += self.direction.y * self.movement_speed
-            collision = self.get_collision(obstacles)
+            collision = get_collision(self.rect, obstacles)
             if collision:
                 if self.direction.y > 0:
                     self.rect.bottom = collision.rect.top

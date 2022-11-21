@@ -92,3 +92,9 @@ class Direction(Enum):
     K_RIGHT = 1073741903
     K_DOWN = 1073741905
     K_UP = 1073741906
+
+
+def get_collision(rect, obstacles) -> pygame.sprite.Sprite:
+    for sprite in obstacles:
+        if rect.colliderect(sprite):
+            return sprite

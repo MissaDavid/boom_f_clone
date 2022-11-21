@@ -1,11 +1,11 @@
 import random
-from random import choice
+from random import choice, choices
 
 import pygame as py
 
 from base_character import Character
 from game_settings import ASSET_FOLDER
-from utils import import_sprites, Direction
+from utils import import_sprites, Direction, get_collision
 
 
 class Enemy(Character):
@@ -61,10 +61,7 @@ class Enemy(Character):
                 self.direction.y = -1
                 self.facing_direction = Direction.K_UP
 
-    def shoot(self):
-        return Bullet((self.rect.x, self.rect.y))
-
-    def update(self, obstacles: list) -> None:
+    def move(self, obstacles) -> None:
         """
         Enemy movement is a little more complex than the Player's
         The idea is to set a random direction and move the sprite for a random number of steps.
@@ -83,22 +80,22 @@ class Enemy(Character):
             self.rect.y += self.direction.y * self.movement_speed
             match self.facing_direction:
                 case Direction.K_LEFT:
-                    collision = self.get_collision(obstacles)
+                    collision = get_collision(self.rect, obstacles)
                     if collision and collision.rect.right > self.rect.left:
                         self.rect.left = collision.rect.right
                         self.set_random_direction()
                 case Direction.K_RIGHT:
-                    collision = self.get_collision(obstacles)
+                    collision = get_collision(self.rect, obstacles)
                     if collision and collision.rect.left < self.rect.right:
                         self.rect.right = collision.rect.left
                         self.set_random_direction()
                 case Direction.K_UP:
-                    collision = self.get_collision(obstacles)
+                    collision = get_collision(self.rect, obstacles)
                     if collision and collision.rect.bottom > self.rect.top:
                         self.rect.top = collision.rect.bottom
                         self.set_random_direction()
                 case Direction.K_DOWN:
-                    collision = self.get_collision(obstacles)
+                    collision = get_collision(self.rect, obstacles)
                     if collision and collision.rect.top < self.rect.bottom:
                         self.rect.bottom = collision.rect.top
                         self.set_random_direction()
