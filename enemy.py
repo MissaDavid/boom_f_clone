@@ -17,6 +17,7 @@ class Enemy(Character):
         self.animation_speed = 0.4
         self.steps = 0
         self.facing_direction: Direction = Direction.K_LEFT
+        self.bullet_group = py.sprite.GroupSingle()
 
     def set_animation_sprites(
         self,
@@ -100,15 +101,58 @@ class Enemy(Character):
                         self.rect.bottom = collision.rect.top
                         self.set_random_direction()
 
+    @staticmethod
+    def roll_for_action():
+        """Shoot or Move"""
+        return choices(population=["S", "M"], cum_weights=(5, 20), k=1)
+
+    def shoot(self) -> py.sprite.Sprite:
+        return Bullet((self.rect.x, self.rect.y), self.facing_direction)
+
+    def update(self, obstacles: list, surface: py.Surface) -> None:
+        action = self.roll_for_action()[0]
+        if action == "M":
+            self.move(obstacles)
+        if action == "S":
+            bullet = self.shoot()
+            if self.bullet_group.sprite is None:
+                self.bullet_group.add(bullet)
+            self.move(obstacles)
+
+        self.bullet_group.draw(surface)
+        self.bullet_group.update(surface, obstacles)
+
 
 class Bullet(py.sprite.Sprite):
-    def __init__(self, position: tuple):
+    def __init__(self, position: tuple, direction: Direction):
         super().__init__()
         self.all_sprites = import_sprites(f"{ASSET_FOLDER}/tilesets/shot.png")
         self.image = self.all_sprites[0]
         self.rect = self.image.get_rect(center=position)
         self.speed = 5
         self.mask = py.mask.from_surface(self.image)
+        self.facing_direction = direction
 
-    def update(self) -> None:
-        self.rect.x += 5
+    def update(self, surface: py.Surface, obstacles: list) -> None:
+        print(f"{self.rect}")
+        match self.facing_direction:
+            case Direction.K_RIGHT:
+                collision = get_collision(self.rect, obstacles)
+                if collision:
+                    self.kill()
+                self.rect.x += 4
+            case Direction.K_LEFT:
+                collision = get_collision(self.rect, obstacles)
+                if collision:
+                    self.kill()
+                self.rect.x -= 4
+            case Direction.K_UP:
+                collision = get_collision(self.rect, obstacles)
+                if collision:
+                    self.kill()
+                self.rect.y -= 4
+            case Direction.K_DOWN:
+                collision = get_collision(self.rect, obstacles)
+                if collision:
+                    self.kill()
+                self.rect.y += 4

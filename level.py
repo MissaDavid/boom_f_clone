@@ -95,7 +95,7 @@ class Level:
         self.player_one.draw(self.display_surface)
 
         # Enemies drawing and update
-        self.enemies.update(all_obstacles)
+        self.enemies.update(all_obstacles, self.display_surface)
         self.enemies.draw(self.display_surface)
 
         # Back to main menu button
